@@ -1,21 +1,28 @@
 package com.domker.study.androidstudy;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Camera;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -50,9 +57,13 @@ public class MainActivity extends AppCompatActivity {
     private SQLDbHelper dbHelper;
     private DbOperation dataop;
 
+    private Button btn_camera;
+
     private Handler mhandler=new Handler();
+    private int REQUEST_CODE=123;
 
     // TODO: purpose: recycle view show videos
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +72,34 @@ public class MainActivity extends AppCompatActivity {
         //dbHelper=new SQLDbHelper(this);//TODO: 这几行不注释掉会报错
         //dataop=new DbOperation(database,dbHelper);
         //dataop.Initialize();
+
+        btn_camera=findViewById(R.id.btn_for_camera);
+
+//        btn_camera.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, CustomCamera.class));
+//            }
+//        });
+        btn_camera.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]
+                                {Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA},
+                        REQUEST_CODE);
+            }
+
+            else {
+                Log.d("debug","preinSur");
+                startActivity(new Intent(MainActivity.this, CustomCamera.class));
+            }
+        });
 
         initDatabase();
         mVideos=dataop.loadVideoFromDatabase();
