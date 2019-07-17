@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.ImageVideoWrapper;
 import com.example.minidouyin.api.IMiniDouyinService;
 import com.example.minidouyin.database.DbOperation;
 import com.example.minidouyin.database.SQLDbHelper;
@@ -140,7 +141,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         mRv = findViewById(R.id.rv);
+
         mRv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
         mRv.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
             @NonNull
             @Override
@@ -176,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         public void bind(final Activity activity, final Video video) {
 //            ImageHelper.displayWebImage(video.getImageUrl(), img);//todo:这里是读取图片，而应该读取视频的一帧作为封面
 
-            Glide.with(img.getContext()).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_launcher_background).crossFade().into(img);
+            Glide.with(activity).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_launcher_background).crossFade().into(img);
             //img.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img.setScaleType(ImageView.ScaleType.FIT_START);
             //img.setScaleX(video.getImage_w());
