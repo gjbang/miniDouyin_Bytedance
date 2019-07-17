@@ -3,7 +3,12 @@ package com.example.minidouyin;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +31,7 @@ import com.example.minidouyin.model.Video;
 import com.example.minidouyin.util.ImageHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -156,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBindViewHolder(@NonNull MyViewHolder viewHolder, int i) {
                 final Video video = mVideos.get(i);
+                Log.d("MainActivity","------"+video.getVideoUrl()+" "+video.getImageUrl());
                 viewHolder.bind(MainActivity.this, video);
             }
 
@@ -179,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
         public void bind(final Activity activity, final Video video) {
 //            ImageHelper.displayWebImage(video.getImageUrl(), img);//todo:这里是读取图片，而应该读取视频的一帧作为封面
 
-            Glide.with(activity).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_launcher_background).crossFade().into(img);
+
+            Glide.with(img.getContext()).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_launcher_background).crossFade().into(img);
             //img.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img.setScaleType(ImageView.ScaleType.FIT_START);
             //img.setScaleX(video.getImage_w());
@@ -188,8 +196,26 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     PlayerActivity.launch(activity, video.getVideoUrl());
+                    Log.d("MainActivity","-click---"+video.getVideoUrl()+" "+video.getImageUrl());
                 }
             });
+        }
+
+        private Bitmap getNetVideoBitmap(String videoUrl) {
+            Bitmap bitmap = null;
+
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            try {
+                //根据url获取缩略图
+                retriever.setDataSource(videoUrl, new HashMap());
+                //获得第一帧图片
+                bitmap = retriever.getFrameAtTime();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } finally {
+                retriever.release();
+            }
+            return bitmap;
         }
     }
 }

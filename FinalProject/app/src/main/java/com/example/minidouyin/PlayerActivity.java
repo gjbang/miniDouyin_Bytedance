@@ -18,7 +18,7 @@ public class PlayerActivity extends AppCompatActivity {
 
 
     public static void launch(Activity activity, String url) {
-        Intent intent = new Intent(activity, VideoActivity.class);
+        Intent intent = new Intent(activity, PlayerActivity.class);
         intent.putExtra("url", url);
         activity.startActivity(intent);
     }
