@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.minidouyin.api.IMiniDouyinService;
 import com.example.minidouyin.database.DbOperation;
 import com.example.minidouyin.database.SQLDbHelper;
@@ -168,11 +170,17 @@ public class MainActivity extends AppCompatActivity {
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
+            //img.setMaxHeight((int)(200+Math.random()*400));
         }
 
         public void bind(final Activity activity, final Video video) {
-            ImageHelper.displayWebImage(video.getImageUrl(), img);//todo:这里是读取图片，而应该读取视频的一帧作为封面
+//            ImageHelper.displayWebImage(video.getImageUrl(), img);//todo:这里是读取图片，而应该读取视频的一帧作为封面
+
+            Glide.with(img.getContext()).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.ic_launcher_background).crossFade().into(img);
+            //img.setScaleType(ImageView.ScaleType.CENTER_CROP);
             img.setScaleType(ImageView.ScaleType.FIT_START);
+            //img.setScaleX(video.getImage_w());
+            //img.setScaleY(video.getImage_h());
             img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
