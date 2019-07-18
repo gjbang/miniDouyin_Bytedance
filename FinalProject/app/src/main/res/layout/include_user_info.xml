@@ -37,8 +37,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/player_like_num"
         android:layout_marginBottom="20dp"
-android:visibility="invisible"
-        android:text="0"/>
+        android:textColor="@color/white_text"
+        android:visibility="visible"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:layout_width="wrap_content"

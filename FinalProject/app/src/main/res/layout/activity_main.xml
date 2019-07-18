@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,102 +8,116 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_launcher_background"
-            android:layout_gravity="left"
-            android:layout_weight="1"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/app_name"
-            android:textColor="@color/white_text"
-            android:gravity="center"
-            android:layout_weight="8"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            app:layout_scrollFlags="scroll|enterAlways">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:textSize="14sp"
-            android:textColor="@color/white_text"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:singleLine="true"
-            android:layout_marginEnd="30dp"
-            android:text="列表"/>
+            <com.domker.study.androidstudy.util.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/unsplash_jesper_christiansen"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="列表"
+                android:textColor="@color/white_text"
+                android:gravity="center"
+                android:layout_marginStart="50dp"
+                android:layout_weight="3"/>
 
-
-    </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
-        android:layout_marginTop="@android:dimen/notification_large_icon_height"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:singleLine="true"
+                android:layout_marginEnd="120dp"
+                android:text="滑动"/>
 
 
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="bottom"
-        android:gravity="center">
-
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7"/>
-
-        <TextView
-            android:id="@+id/main_page"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:text="首页"/>
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.6"
-            android:src="@drawable/ic_add_24dp"
-            android:textAlignment="gravity"
-            android:shadowRadius="0.5"
-            android:id="@+id/btn_for_camera"
-            tools:targetApi="m" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv"
+                android:layout_marginTop="@android:dimen/notification_large_icon_height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                />
+        </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/about_me"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:layout_height="match_parent"
-            android:textColor="@color/colorPrimary"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="我"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.7"/>
-
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="bottom"
+            android:gravity="center">
 
 
-</FrameLayout>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"/>
+
+            <TextView
+                android:id="@+id/main_page"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:text="首页"/>
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:src="@drawable/ic_add_24dp"
+                android:textAlignment="gravity"
+                android:shadowRadius="0.5"
+                android:id="@+id/btn_for_camera"
+                tools:targetApi="m" />
+
+
+            <TextView
+                android:id="@+id/about_me"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                android:layout_height="match_parent"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="我"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.domker.study.androidstudy.player.VideoPlayerIJK;
 import com.domker.study.androidstudy.player.VideoPlayerListener;
+import com.sackcentury.shinebuttonlib.ShineButton;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
@@ -37,7 +38,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class IJKPlayerActivity extends AppCompatActivity implements View.OnClickListener {
     VideoPlayerIJK ijkPlayer = null;
     SeekBar showVolume;
-    TextView tvLoadMsg;
+    TextView tvLoadMsg, tvLike;
     ProgressBar pbLoading;
     RelativeLayout rlLoading;
     TextView tvPlayEnd;
@@ -49,6 +50,8 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
     Button transparent;
     AppCompatImageButton player_back;
     AppCompatImageButton player_rotation;
+    ShineButton player_like_button;
+
 
     AudioManager am;
 
@@ -63,6 +66,9 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
     boolean isPlayFinish = false;
     VolumeReceiver receiver;
 
+    int likeNum;
+    boolean isClick=false;
+
     String fatherUrl;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,13 +79,16 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
         fatherUrl=intent.getStringExtra("url");
         Log.d("debug","url"+fatherUrl);
 
+        tvLike = findViewById(R.id.player_like_num);
+        likeNum = (int)(Math.random()*10000);
+        tvLike.setText(likeNum+"");
+
         init();
         initIJKPlayer();
         receiver=new VolumeReceiver();
         IntentFilter filter=new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         this.registerReceiver(receiver,filter);
-
 
     }
 
@@ -111,9 +120,24 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
         rlPlayer = findViewById(R.id.rl_player);
         player_back=findViewById(R.id.player_back_btn);
         player_rotation=findViewById(R.id.player_rotation_image);
+        player_like_button = findViewById(R.id.player_like_button);
         ijkPlayerView.setOnClickListener(this);
         player_back.setOnClickListener(this);
         player_rotation.setOnClickListener(this);
+        player_like_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isClick){
+                    tvLike.setText(likeNum+"");
+                    isClick = false;
+                }
+                else{
+                    tvLike.setText(likeNum+1+"");
+                    isClick = true;
+                }
+
+            }
+        });
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {

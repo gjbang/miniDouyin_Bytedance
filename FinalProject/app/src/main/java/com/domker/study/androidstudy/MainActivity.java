@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // List<Video>即为返回的数据，RecycleView的输入源//DONE:7.16但暂时为直接json
                     mVideos.clear();
-                    //mVideos=dataop.loadVideoFromDatabase();
+                    mVideos=dataop.loadVideoFromDatabase();
                     //mVideos.addAll(response.body().getFeeds());
 
                     //Objects.requireNonNull(mRv.getAdapter()).notifyItemInserted(15);
