@@ -1,25 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+
+<FrameLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".PlayerActivity"
-    >
-    <VideoView
-        android:id="@+id/video_container"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="#000000">
+
+        <RelativeLayout
+            android:id="@+id/rl_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <com.domker.study.androidstudy.player.VideoPlayerIJK
+                android:id="@+id/ijkPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/set_volume"
+                android:layout_centerInParent="true"
+                android:layout_margin="10dp"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tv_play_end"
+                android:visibility="invisible"
+                android:text="播放结束"
+                android:textColor="#ddd"
+                android:textSize="30dp"
+                android:background="#030303"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+
+            <RelativeLayout
+                android:id="@+id/rl_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="#de262a3b">
+
+                <TextView
+                    android:id="@+id/tv_load_msg"
+                    android:text="正在加载"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/pb_loading"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/pb_loading"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="60dp"
+                    android:indeterminate="false"
+                    android:padding="5dp" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:left="15dp"
+        android:top="35dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_arrow_back_white_36dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/player_back_btn"
         />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_gravity="bottom">
+        <include
+            android:id="@+id/include_user_info"
+            layout="@layout/include_user_info"
+            android:layout_width="wrap_content"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="60dp"
+            />
+    </RelativeLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
+
+
+

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.domker.study.androidstudy.R;
+
 public class VideoActivity extends AppCompatActivity {
 
     //TODO:purpose: use camera to get videos and post it
