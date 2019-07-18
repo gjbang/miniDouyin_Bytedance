@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:id="@+id/include_user_info">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/ic_screen_rotation_white_36dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/player_rotation_image"/>
+
+
+    <com.sackcentury.shinebuttonlib.ShineButton
+        android:layout_width="35dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:src="@android:color/darker_gray"
+        android:id="@+id/player_like_button"
+        app:btn_color="@android:color/white"
+        app:btn_fill_color="@android:color/holo_red_light"
+        app:allow_random_color="false"
+        android:layout_marginBottom="10dp"
+        app:siShape="@raw/like"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/player_like_num"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/white_text"
+        android:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="40dp"
+        android:maxHeight="40dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_launch_white_36dp"
+        android:background="@android:color/transparent"
+        android:id="@+id/player_launch_image"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/player_launch_num"
+        android:visibility="invisible"
+        android:text="转发"/>
+
+
+
+
+</LinearLayout>

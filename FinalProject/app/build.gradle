@@ -1,26 +1,29 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
 android {
     compileSdkVersion 28
-    buildToolsVersion "29.0.0"
     defaultConfig {
-        applicationId "com.example.minidouyin"
-        minSdkVersion 16
+        applicationId "com.domker.study.androidstudy"
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
-    // self-define
-    // gj_7.16: used for PlayerActivity
-    // dependency sackcentury need this
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -30,8 +33,26 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.aar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+//    compile 'com.facebook.fresco:imagepipeline-okhttp:0.9.0+'
     implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+
+    implementation project(':ijkplayer-armv7a')
+    implementation project(':ijkplayer-java')
+    implementation project(':ijkplayer-x86')
+    implementation project(':ijkplayer-exo')
+
+    /*implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-exo:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'*/
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -54,4 +75,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     debugImplementation 'com.idescout.sql:sqlscout-server:4.1'
     releaseImplementation 'com.idescout.sql:sqlscout-server-noop:4.1'
+    implementation 'com.idescout.sql:sqlscout-server:4.1'
+    implementation 'at.stefangeyer.challonge.rest:retrofit:2.0.1'
+    compile 'com.github.clans:fab:1.6.4'
 }
