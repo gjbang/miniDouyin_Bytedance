@@ -16,8 +16,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,7 +39,9 @@ import com.domker.study.androidstudy.model.Video;
 import com.domker.study.androidstudy.util.ImageHelper;
 import com.idescout.sql.SqlScoutServer;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -72,6 +76,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         //dbHelper=new SQLDbHelper(this);//TODO: 这几行不注释掉会报错
         //dataop=new DbOperation(database,dbHelper);
@@ -241,10 +249,14 @@ public class MainActivity extends AppCompatActivity {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView img;
+        public TextView txName;
+        public TextView txTime;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
+            txName = itemView.findViewById(R.id.txName);
+            txTime = itemView.findViewById(R.id.txTime);
         }
 
         public void bind(final Activity activity, final Video video) {
@@ -261,6 +273,11 @@ public class MainActivity extends AppCompatActivity {
 
             img.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(img.getContext()).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.place_holder).into(img);
+            txName.setText(video.getUserName());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
+            String dateString = simpleDateFormat.format(video.getCreatedAt());
+            txTime.setText(dateString);
+
             img.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -16,11 +17,13 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_launcher_background"
+            android:layout_gravity="left"
             android:layout_weight="1"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/app_name"
+            android:textColor="@color/white_text"
             android:gravity="center"
             android:layout_weight="10"/>
         <Button
