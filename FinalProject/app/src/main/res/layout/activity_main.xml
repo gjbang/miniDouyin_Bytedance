@@ -25,7 +25,19 @@
             android:text="@string/app_name"
             android:textColor="@color/white_text"
             android:gravity="center"
-            android:layout_weight="10"/>
+            android:layout_weight="8"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:textSize="14sp"
+            android:textColor="@color/white_text"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_marginEnd="30dp"
+            android:text="列表"/>
 
 
     </LinearLayout>
@@ -42,7 +54,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="bottom"
         android:gravity="center">
 
@@ -50,29 +63,35 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="0.7"/>
 
         <TextView
+            android:id="@+id/main_page"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:textColor="@color/colorPrimary"
             android:layout_gravity="center"
             android:gravity="center"
+            android:textSize="14sp"
             android:text="首页"/>
 
-        <Button
+        <ImageButton
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.6"
-            android:text="+"
+            android:src="@drawable/ic_add_24dp"
+            android:textAlignment="gravity"
             android:shadowRadius="0.5"
-            android:id="@+id/btn_for_camera"/>
+            android:id="@+id/btn_for_camera"
+            tools:targetApi="m" />
 
 
         <TextView
+            android:id="@+id/about_me"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:textSize="14sp"
             android:layout_height="match_parent"
             android:textColor="@color/colorPrimary"
             android:layout_gravity="center"
@@ -82,7 +101,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="0.7"/>
 
     </LinearLayout>
 

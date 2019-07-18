@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,13 +60,14 @@ public class MainActivity extends AppCompatActivity {
     private Retrofit retrofit;
     private IMiniDouyinService miniDouyinService;
     private RecyclerView mRv;
+    private TextView mMainPage,mAboutMe;
     private List<Video> mVideos = new ArrayList<>();
 
     private SQLiteDatabase database;
     private SQLDbHelper dbHelper;
     private DbOperation dataop;
 
-    private Button btn_camera;
+    private ImageButton btn_camera;
 
     private Handler mhandler=new Handler();
     private int REQUEST_CODE=123;
@@ -80,10 +82,11 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        mMainPage = findViewById(R.id.main_page);
+        mAboutMe = findViewById(R.id.about_me);
 
-        //dbHelper=new SQLDbHelper(this);//TODO: 这几行不注释掉会报错
-        //dataop=new DbOperation(database,dbHelper);
-        //dataop.Initialize();
+        mMainPage.setTextColor(getResources().getColor(R.color.white_text));
+        mAboutMe.setTextColor(getResources().getColor(R.color.colorPrimary));
 
         btn_camera=findViewById(R.id.btn_for_camera);
 
@@ -151,22 +154,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
                 if(response.isSuccessful()&&response.body()!=null){
-                    //Feed feed=response.body();  //get feed object
-                    //List<Video> videos=feed.getFeeds(); //get videos' list
 
                     // List<Video>即为返回的数据，RecycleView的输入源//DONE:7.16但暂时为直接json
                     mVideos.clear();
-                    mVideos=dataop.loadVideoFromDatabase();
+                    //mVideos=dataop.loadVideoFromDatabase();
                     //mVideos.addAll(response.body().getFeeds());
 
                     //Objects.requireNonNull(mRv.getAdapter()).notifyItemInserted(15);
                             //notifyDataSetChanged();
                     mRv.getAdapter().notifyDataSetChanged();
 
-//                    List<Video> videos=response.body().getFeeds();
                     dataop.saveVideo2Database(mVideos);
 
-//                    dataop.saveVideo2Database(videos);
                     call.cancel();
                 }
             }
@@ -216,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
         mRv = findViewById(R.id.rv);
 
         mRv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-
 //
 //        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 //        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//可防止Item切换
@@ -261,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
 
         public void bind(final Activity activity, final Video video) {
 
-            //ImageHelper.displayWebImage(video.getImageUrl(), img);
             int width = ((Activity)img.getContext()).getWindowManager().getDefaultDisplay().getWidth();
             ViewGroup.LayoutParams para;
             para = img.getLayoutParams();
@@ -272,7 +269,8 @@ public class MainActivity extends AppCompatActivity {
 
 
             img.setScaleType(ImageView.ScaleType.FIT_XY);
-            Glide.with(img.getContext()).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.place_holder).into(img);
+            Glide.with(img.getContext()).load(video.getImageUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.place_holder).into(img);
             txName.setText(video.getUserName());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-dd");
             String dateString = simpleDateFormat.format(video.getCreatedAt());
