@@ -26,12 +26,7 @@
             android:textColor="@color/white_text"
             android:gravity="center"
             android:layout_weight="10"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="camera"
-            android:id="@+id/btn_for_camera"
-            android:layout_weight="2"/>
+
 
     </LinearLayout>
 
@@ -51,12 +46,43 @@
         android:layout_gravity="bottom"
         android:gravity="center">
 
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="首页"/>
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:text="+"
+            android:shadowRadius="0.5"
+            android:id="@+id/btn_for_camera"/>
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="我"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
