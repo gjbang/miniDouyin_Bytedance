@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     >
 
     <ImageView
@@ -11,38 +12,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:alpha="0.8"
+        android:alpha="0.7"
         android:src="@drawable/ic_launcher_background"
         android:padding="5dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"/>
 
         <TextView
             android:id="@+id/txName"
             android:text="txName"
             android:textSize="16sp"
             android:textColor="@color/white_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"/>
 
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"/>
+
         <TextView
             android:id="@+id/txTime"
             android:text="txTime"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textColor="@color/white_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:layout_gravity="center"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"/>
 
     </LinearLayout>
 
