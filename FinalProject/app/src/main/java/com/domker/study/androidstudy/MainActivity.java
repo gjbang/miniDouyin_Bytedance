@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
         initDatabase();
         mVideos=dataop.loadVideoFromDatabase();
         initRecyclerView();
-        mRv.getAdapter().notifyDataSetChanged();
+        //mRv.getAdapter().notifyItemInserted(15);
+                //notifyDataSetChanged();
         DataRefresh();
 //        mhandler.post(new Runnable() {
 //            @Override
@@ -147,9 +148,12 @@ public class MainActivity extends AppCompatActivity {
 
                     // List<Video>即为返回的数据，RecycleView的输入源//DONE:7.16但暂时为直接json
                     mVideos.clear();
-                    mVideos.addAll(response.body().getFeeds());
-                    Objects.requireNonNull(mRv.getAdapter()).notifyItemInserted(10);
+                    mVideos=dataop.loadVideoFromDatabase();
+                    //mVideos.addAll(response.body().getFeeds());
+
+                    //Objects.requireNonNull(mRv.getAdapter()).notifyItemInserted(15);
                             //notifyDataSetChanged();
+                    mRv.getAdapter().notifyDataSetChanged();
 
 //                    List<Video> videos=response.body().getFeeds();
                     dataop.saveVideo2Database(mVideos);
@@ -202,7 +206,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         mRv = findViewById(R.id.rv);
+
         mRv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+//
+//        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+//        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//可防止Item切换
+//        mRv.setLayoutManager(layoutManager);
+
         mRv.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
             @NonNull
             @Override
@@ -222,6 +233,8 @@ public class MainActivity extends AppCompatActivity {
             public int getItemCount() {
                 return mVideos.size();
             }
+
+
         });
     }
 
@@ -240,12 +253,13 @@ public class MainActivity extends AppCompatActivity {
             int width = ((Activity)img.getContext()).getWindowManager().getDefaultDisplay().getWidth();
             ViewGroup.LayoutParams para;
             para = img.getLayoutParams();
-            para.height = video.getImage_h()*video.getImage_w()/width;
             para.width = width/2;
+            para.height = video.getImage_h()*para.width/video.getImage_w();
             img.setLayoutParams(para);
-            Log.d("MainActivity",video.getImage_h()+"");
+            Log.d("MainActivity",para.height+" "+para.width);
 
-            img.setScaleType(ImageView.ScaleType.FIT_START);
+
+            img.setScaleType(ImageView.ScaleType.FIT_XY);
             Glide.with(img.getContext()).load(video.getImageUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.place_holder).into(img);
             img.setOnClickListener(new View.OnClickListener() {
                 @Override
