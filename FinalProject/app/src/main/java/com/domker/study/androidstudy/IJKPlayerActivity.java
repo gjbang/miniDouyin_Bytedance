@@ -38,7 +38,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class IJKPlayerActivity extends AppCompatActivity implements View.OnClickListener {
     VideoPlayerIJK ijkPlayer = null;
     SeekBar showVolume;
-    TextView tvLoadMsg, tvLike;
+    TextView tvLoadMsg,tvLike;
     ProgressBar pbLoading;
     RelativeLayout rlLoading;
     TextView tvPlayEnd;
@@ -50,10 +50,12 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
     Button transparent;
     AppCompatImageButton player_back;
     AppCompatImageButton player_rotation;
-    ShineButton player_like_button;
-
 
     AudioManager am;
+
+    int likeNum;
+    boolean isClick=false;
+    ShineButton player_like_button;
 
     private boolean isPortrait = true;
     private boolean isRecycle=false;
@@ -66,9 +68,6 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
     boolean isPlayFinish = false;
     VolumeReceiver receiver;
 
-    int likeNum;
-    boolean isClick=false;
-
     String fatherUrl;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,16 +78,13 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
         fatherUrl=intent.getStringExtra("url");
         Log.d("debug","url"+fatherUrl);
 
-        tvLike = findViewById(R.id.player_like_num);
-        likeNum = (int)(Math.random()*10000);
-        tvLike.setText(likeNum+"");
-
         init();
         initIJKPlayer();
         receiver=new VolumeReceiver();
         IntentFilter filter=new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
         this.registerReceiver(receiver,filter);
+
 
     }
 
@@ -120,10 +116,15 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
         rlPlayer = findViewById(R.id.rl_player);
         player_back=findViewById(R.id.player_back_btn);
         player_rotation=findViewById(R.id.player_rotation_image);
-        player_like_button = findViewById(R.id.player_like_button);
         ijkPlayerView.setOnClickListener(this);
         player_back.setOnClickListener(this);
         player_rotation.setOnClickListener(this);
+        player_like_button=findViewById(R.id.player_like_button);
+
+        tvLike = findViewById(R.id.player_like_num);
+        likeNum = (int)(Math.random()*10000);
+        tvLike.setText(likeNum+"");
+
         player_like_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +139,7 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
+
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -211,10 +213,12 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
                 refresh();
                 handler.sendEmptyMessageDelayed(MSG_REFRESH, 50);
                 isPlayFinish = false;
-                mVideoHeight = mp.getVideoWidth();
-                mVideoWidth = mp.getVideoHeight();
-                portrait();
-                //toggle();
+                mVideoWidth = mp.getVideoWidth();
+                mVideoHeight = mp.getVideoHeight();
+                Log.d("debug","pre"+mVideoWidth);
+//                portrait();
+//                toggle();
+                videoScreenInit();
                 mp.start();
                 rlLoading.setVisibility(View.GONE);
             }
@@ -225,8 +229,8 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
-                mVideoWidth = mp.getVideoHeight();
-                mVideoHeight = mp.getVideoWidth();
+                mVideoWidth = mp.getVideoWidth();
+                mVideoHeight = mp.getVideoHeight();
             }
         });
     }
@@ -256,7 +260,7 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
             ijkPlayer = null;
         }
 
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
         super.onDestroy();
     }
 
@@ -277,7 +281,6 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
             case R.id.ijkPlayer:
                 if(!isPause){
                     ijkPlayer.pause();
-
                 }
                 else{
                     ijkPlayer.start();
@@ -286,7 +289,7 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
                 break;
 
             case R.id.player_rotation_image:
-                toggle();
+                videoScreenInit();
                 break;
             case R.id.player_back_btn:
                 finish();
@@ -316,8 +319,8 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
 
         WindowManager wm = (WindowManager) this
                 .getSystemService(Context.WINDOW_SERVICE);
-        float height = wm.getDefaultDisplay().getWidth();
-        float width = wm.getDefaultDisplay().getHeight();
+        float width = wm.getDefaultDisplay().getWidth();
+        float height = wm.getDefaultDisplay().getHeight();
         float ratio = width / height;
         if (width < height) {
             ratio = height/width;
@@ -326,6 +329,10 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rlPlayer.getLayoutParams();
         layoutParams.height = (int) (mVideoHeight * ratio);
         layoutParams.width = (int) width;
+        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        Log.d("debug",width+"");
+
         rlPlayer.setLayoutParams(layoutParams);
         ijkPlayer.start();
     }
@@ -337,14 +344,15 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
 
         WindowManager wm = (WindowManager) this
                 .getSystemService(Context.WINDOW_SERVICE);
-        float height = wm.getDefaultDisplay().getWidth();
-        float width = wm.getDefaultDisplay().getHeight();
+        float width = wm.getDefaultDisplay().getWidth();
+        float height = wm.getDefaultDisplay().getHeight();
         float ratio = width / height;
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rlPlayer.getLayoutParams();
 
         layoutParams.height = (int) RelativeLayout.LayoutParams.MATCH_PARENT;
         layoutParams.width = (int) RelativeLayout.LayoutParams.MATCH_PARENT;
+        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
         rlPlayer.setLayoutParams(layoutParams);
         //btnSetting.setText(getResources().getString(R.string.smallScreen));
         ijkPlayer.start();

@@ -1,11 +1,14 @@
 package com.domker.study.androidstudy;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.domker.study.androidstudy.api.IMiniDouyinService;
@@ -13,12 +16,17 @@ import com.domker.study.androidstudy.model.Result;
 import com.domker.study.androidstudy.util.ResourceUtils;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -35,11 +43,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import com.domker.study.androidstudy.network.*;
+import com.github.clans.fab.FloatingActionButton;
+
 public class PostActivity extends AppCompatActivity implements ProgressRequestBody.UploadCallbacks{
 
     private final String TAG = "main";
     private SurfaceView sv;
-    private Button btn_choose,btn_post,btn_choose_image;
+    private FloatingActionButton btn_choose,btn_post,btn_choose_image;
+
+    private AppCompatImageButton btn_back;
+    private ImageView view_show_image=null;
     private MediaPlayer mediaPlayer;
     private int currentPosition = 0;
     private boolean isPlaying;
@@ -67,13 +80,15 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
         Log.d("debug","url1"+url);
 
         sv = (SurfaceView) findViewById(R.id.post_ijkPlayer);
-        btn_choose=findViewById(R.id.post_choose_image);
         btn_post=findViewById(R.id.post_do_post);
         btn_choose_image=findViewById(R.id.post_choose);
+        btn_back=findViewById(R.id.post_back);
+        view_show_image=findViewById(R.id.preview_image);
 
         btn_post.setOnClickListener(click);
-        btn_choose.setOnClickListener(click);
         btn_choose_image.setOnClickListener(click);
+        btn_back.setOnClickListener(click);
+
 
         // 为SurfaceHolder添加回调
         sv.getHolder().addCallback(callback);
@@ -84,6 +99,20 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
 
     }
 
+
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        play(0);
+//    }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        play(0);
+//    }
+
     public void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -92,12 +121,7 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
                 PICK_IMAGE);
     }
 
-    public void chooseVideo() {
-        Intent intent = new Intent();
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
@@ -114,6 +138,9 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
         if (resultCode == RESULT_OK && null != data) {
             if (requestCode == PICK_IMAGE) {
                 mSelectedImage = data.getData();
+                sv.setVisibility(View.GONE);
+                view_show_image.setImageURI(mSelectedImage);
+                view_show_image.setVisibility(View.VISIBLE);
                 Log.d(TAG, "selectedImage = " + mSelectedImage);
 //                mBtn.setText(R.string.select_a_video);
             } else if (requestCode == PICK_VIDEO) {
@@ -238,6 +265,7 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
                 play(currentPosition);
                 currentPosition = 0;
             }
+            play(0);
         }
 
         @Override
@@ -251,27 +279,26 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
 
     private View.OnClickListener click = new View.OnClickListener() {
 
+        @SuppressLint("StaticFieldLeak")
         @Override
         public void onClick(View v) {
 
             switch (v.getId()) {
-                case R.id.post_choose_image:
-                    play(0);
-                    break;
                 case R.id.post_choose:
                     chooseImage();
                     break;
                 case R.id.post_do_post:
                     postVideo();
                     break;
+                case R.id.post_back:
+                    finish();
+                    break;
                 default:
                     break;
             }
         }
     };
-
-
-    /*
+    /*1
      * 停止播放
      */
     protected void stop() {
@@ -335,6 +362,35 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
                     play(0);
                     isPlaying = false;
                     return false;
+                }
+            });
+
+            mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+                @Override
+                public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                    int videoWidth=mp.getVideoWidth();
+                    int videoHeight=mp.getVideoHeight();
+
+                    int surfaceWidth=sv.getWidth();
+                    int surfaceHeight=sv.getHeight();
+
+                    float max;
+                    if (getResources().getConfiguration().orientation== ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                        //竖屏模式下按视频宽度计算放大倍数值
+                        max = Math.max((float) videoWidth / (float) surfaceWidth,(float) videoHeight / (float) surfaceHeight);
+                    } else{
+                        //横屏模式下按视频高度计算放大倍数值
+                        max = Math.max(((float) videoWidth/(float) surfaceHeight),(float) videoHeight/(float) surfaceWidth);
+                    }
+
+                    //视频宽高分别/最大倍数值 计算出放大后的视频尺寸
+                    videoWidth = (int) Math.ceil((float) videoWidth / max);
+                    videoHeight = (int) Math.ceil((float) videoHeight / max);
+
+                    //无法直接设置视频尺寸，将计算出的视频尺寸设置到surfaceView 让视频自动填充。
+                    RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(videoWidth,videoHeight);
+                    params.addRule(RelativeLayout.CENTER_VERTICAL);
+                    sv.setLayoutParams(params);
                 }
             });
         } catch (Exception e) {

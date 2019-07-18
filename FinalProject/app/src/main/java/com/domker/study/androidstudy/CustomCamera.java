@@ -8,6 +8,7 @@ import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.ExifInterface;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,9 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.domker.study.androidstudy.util.ResourceUtils;
+import com.github.clans.fab.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -51,6 +55,11 @@ public class CustomCamera extends AppCompatActivity {
     private File recordFile;
     private String recordStoreString;
 
+    private int delayTime=0;
+    private int timeLen=0;
+
+    private FloatingActionButton btn_delay_3,btn_delay_10,btn_time_5,btn_time_10,btn_time_30;
+    private Uri mSelectedVideo=null;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -74,6 +83,8 @@ public class CustomCamera extends AppCompatActivity {
 
         });
 
+//        mSurfaceView.setZOrderOnTop(true);//添加这句代码可以解决黑屏问题，但是SurfaceView上的控件被遮挡了
+//        mSurfaceView.setZOrderMediaOverlay(true);//加这句的话解决SurfaceView上的控件都被遮挡的问题
         //to.do 给SurfaceHolder添加Callback
         mCamera = getCamera(CAMERA_TYPE);
         SurfaceHolder mSurfaceHolder = mSurfaceView.getHolder();
@@ -102,6 +113,23 @@ public class CustomCamera extends AppCompatActivity {
             }
         });
 
+
+        btn_delay_3=findViewById(R.id.time_delay_3);
+        btn_delay_10=findViewById(R.id.time_delay_10);
+        btn_time_5=findViewById(R.id.time_len_5);
+        btn_time_10=findViewById(R.id.time_len_10);
+        btn_time_30=findViewById(R.id.time_len_30);
+
+        btn_delay_3.setOnClickListener(click);
+        btn_delay_10.setOnClickListener(click);
+        btn_time_5.setOnClickListener(click);
+        btn_time_10.setOnClickListener(click);
+        btn_time_30.setOnClickListener(click);
+
+//        unsigned demo=btn_time_30.getColorNormal();
+
+        Log.d("debug","color"+ new Integer(btn_time_30.getColorNormal()).toString());
+
         findViewById(R.id.btn_picture).setOnClickListener(v -> {
             //to.do 拍一张照片
             mCamera.takePicture(null, null, mPicture);
@@ -125,7 +153,7 @@ public class CustomCamera extends AppCompatActivity {
                         public void run() {
                             mMediaRecorder.start();
                         }
-                    },100);
+                    },delayTime);
 
 
                 }catch (Exception e){
@@ -143,6 +171,13 @@ public class CustomCamera extends AppCompatActivity {
             else
                 mCamera = getCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
             startPreview(mSurfaceHolder);
+        });
+
+        findViewById(R.id.btn_from_File).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseVideo();
+            }
         });
 
 //        findViewById(R.id.btn_zoom).setOnClickListener(v -> {
@@ -167,6 +202,46 @@ public class CustomCamera extends AppCompatActivity {
 //                mCamera.setParameters(parameters);
 //            }
 //        });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    private static final int PICK_VIDEO = 2;
+
+    public void chooseVideo() {
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Video"), PICK_VIDEO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (resultCode == RESULT_OK && null != data) {
+            if (requestCode == PICK_VIDEO) {
+                mSelectedVideo = data.getData();
+                Log.d("debug", "mSelectedVideo = " + mSelectedVideo);
+//                mBtn.setText(R.string.post_it);
+
+                if(mSelectedVideo!=null){
+                    Intent intent=new Intent(CustomCamera.this,PostActivity.class);
+
+                    File tempF=new File(ResourceUtils.getRealPath(CustomCamera.this,mSelectedVideo));
+
+                    Log.d("debug",tempF.getAbsolutePath());
+                    intent.putExtra("url",tempF.getAbsolutePath());
+                    startActivity(intent);
+                }
+            }
+        }
     }
 
     //-----------------------------------------------------------------//
@@ -347,15 +422,18 @@ public class CustomCamera extends AppCompatActivity {
 
         mMediaRecorder.setOrientationHint(rotationDegree);
 
-        mMediaRecorder.setMaxDuration(1000);
-        mMediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
-            @Override
-            public void onInfo(MediaRecorder mr, int what, int extra) {
-                if(what==MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED){
-                    releaseMediaRecorder();
+        if(timeLen!=0){
+            mMediaRecorder.setMaxDuration(timeLen);
+            mMediaRecorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
+                @Override
+                public void onInfo(MediaRecorder mr, int what, int extra) {
+                    if(what==MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED){
+                        releaseMediaRecorder();
+                    }
                 }
-            }
-        });
+            });
+        }
+
         return true;
     }
 
@@ -450,5 +528,120 @@ public class CustomCamera extends AppCompatActivity {
         }
         return optimalSize;
     }
+
+    private boolean cdelay_3=false,cdelay_10=false,ctime_5=false,ctime_10=false,ctime_30=false;
+
+    private View.OnClickListener click = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()) {
+                case R.id.time_delay_3:
+                    if(!cdelay_3){
+                        btn_delay_3.setColorNormal(0xA79243E6);
+                        btn_delay_10.setColorNormal(0xFFDA4336);
+                        cdelay_10=false;
+                        cdelay_3=true;
+
+                        delayTime=3000;
+                    }
+                    else{
+                        btn_delay_3.setColorNormal(0xFFDA4336);
+                        cdelay_3=false;
+
+                        if(!cdelay_3&&!cdelay_10){
+                            delayTime=0;
+                        }
+                    }
+
+                    break;
+
+                case R.id.time_delay_10:
+                    if(!cdelay_10){
+                        btn_delay_10.setColorNormal(0xA79243E6);
+                        btn_delay_3.setColorNormal(0xFFDA4336);
+                        cdelay_3=false;
+                        cdelay_10=true;
+
+                        delayTime=10000;
+                    }
+                    else{
+                        btn_delay_10.setColorNormal(0xFFDA4336);
+                        cdelay_10=false;
+
+                        if(!cdelay_3&&!cdelay_10){
+                            delayTime=0;
+                        }
+                    }
+                    break;
+
+                case R.id.time_len_5:
+                    if(!ctime_5){
+                        btn_time_5.setColorNormal(0xA3F7559E);
+                        ctime_5=true;
+                        timeLen=5000;
+
+                        btn_time_10.setColorNormal(0xFFDA4336);
+                        btn_time_30.setColorNormal(0xFFDA4336);
+                        ctime_10=false;
+                        ctime_30=false;
+                    }
+                    else{
+                        btn_time_5.setColorNormal(0xFFDA4336);
+                        ctime_5=false;
+
+                        if(!ctime_5&&!ctime_30&&!ctime_10){
+                            timeLen=0;
+                        }
+                    }
+                    break;
+
+                case R.id.time_len_10:
+                    if(!ctime_10){
+                        btn_time_10.setColorNormal(0xA3F7559E);
+                        ctime_10=true;
+                        timeLen=10000;
+
+                        btn_time_5.setColorNormal(0xFFDA4336);
+                        btn_time_30.setColorNormal(0xFFDA4336);
+                        ctime_5=false;
+                        ctime_30=false;
+                    }
+                    else{
+                        btn_time_10.setColorNormal(0xFFDA4336);
+                        ctime_10=false;
+
+                        if(!ctime_5&&!ctime_30&&!ctime_10){
+                            timeLen=0;
+                        }
+                    }
+                    break;
+
+                case R.id.time_len_30:
+                    if(!ctime_30){
+                        btn_time_30.setColorNormal(0xA3F7559E);
+                        ctime_30=true;
+                        timeLen=30000;
+
+                        btn_time_10.setColorNormal(0xFFDA4336);
+                        btn_time_5.setColorNormal(0xFFDA4336);
+                        ctime_10=false;
+                        ctime_5=false;
+                    }
+                    else{
+                        btn_time_30.setColorNormal(0xFFDA4336);
+                        ctime_30=false;
+
+                        if(!ctime_5&&!ctime_30&&!ctime_10){
+                            timeLen=0;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
 }

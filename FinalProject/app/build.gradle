@@ -77,4 +77,5 @@ dependencies {
     releaseImplementation 'com.idescout.sql:sqlscout-server-noop:4.1'
     implementation 'com.idescout.sql:sqlscout-server:4.1'
     implementation 'at.stefangeyer.challonge.rest:retrofit:2.0.1'
+    implementation 'com.github.clans:fab:1.6.4'
 }
