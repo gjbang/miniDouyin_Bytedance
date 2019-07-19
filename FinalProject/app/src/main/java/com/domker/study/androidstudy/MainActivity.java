@@ -60,6 +60,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_about_me;
+    private ImageButton btn_refresh;
 
     private Retrofit retrofit;
     private IMiniDouyinService miniDouyinService;
@@ -100,14 +101,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+        btn_refresh = findViewById(R.id.refresh);
+        btn_refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                initDatabase();
+                mVideos=dataop.loadVideoFromDatabase();
+
+                initRecyclerView();
+
+                new AsyncTask<Objects,Integer,Objects>(){
+
+                    @Override
+                    protected Objects doInBackground(Objects... objects) {
+                        DataRefresh();
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Objects objects) {
+                        super.onPostExecute(objects);
+                        mVideos=dataop.loadVideoFromDatabase();
+                    }
+                }.execute();
+            }
+        });
+
+
+
         btn_camera=findViewById(R.id.btn_for_camera);
 
-//        btn_camera.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(MainActivity.this, CustomCamera.class));
-//            }
-//        });
         btn_camera.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(MainActivity.this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
