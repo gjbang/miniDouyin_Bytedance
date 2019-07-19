@@ -62,6 +62,9 @@ public class CustomCamera extends AppCompatActivity {
     private Uri mSelectedVideo=null;
 
 
+    private String userName="";
+    private String stuID="";
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,11 @@ public class CustomCamera extends AppCompatActivity {
             }
 
         });
+
+        Intent intent=getIntent();
+        userName=intent.getStringExtra("user_name");
+        stuID=intent.getStringExtra("stuid");
+
 
 //        mSurfaceView.setZOrderOnTop(true);//添加这句代码可以解决黑屏问题，但是SurfaceView上的控件被遮挡了
 //        mSurfaceView.setZOrderMediaOverlay(true);//加这句的话解决SurfaceView上的控件都被遮挡的问题
@@ -238,6 +246,10 @@ public class CustomCamera extends AppCompatActivity {
 
                     Log.d("debug",tempF.getAbsolutePath());
                     intent.putExtra("url",tempF.getAbsolutePath());
+
+                    intent.putExtra("userName",userName);
+                    intent.putExtra("stuID",stuID);
+
                     startActivity(intent);
                 }
             }
@@ -449,6 +461,9 @@ public class CustomCamera extends AppCompatActivity {
         }else{
             intent.putExtra("url",recordStoreString);
         }
+
+        intent.putExtra("userName",userName);
+        intent.putExtra("stuID",stuID);
 
         mMediaRecorder.stop();
         mMediaRecorder.reset();

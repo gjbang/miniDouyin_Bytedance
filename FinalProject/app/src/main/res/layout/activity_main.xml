@@ -45,8 +45,15 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:singleLine="true"
-                android:layout_marginEnd="120dp"
-                android:text="滑动"/>
+                android:layout_marginEnd="20dp"
+                android:text="详情"/>
+            <ImageButton
+                android:id="@+id/refresh"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:padding="0dp"
+                android:background="#00000000"
+                android:src="@drawable/refresh"/>
 
 
         </LinearLayout>
@@ -101,7 +108,7 @@
                 tools:targetApi="m" />
 
 
-            <TextView
+            <Button
                 android:id="@+id/about_me"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -109,8 +116,10 @@
                 android:layout_height="match_parent"
                 android:textColor="@color/colorPrimary"
                 android:layout_gravity="center"
+                android:background="@android:color/transparent"
                 android:gravity="center"
-                android:text="我"/>
+                android:text="我"
+                />
 
             <View
                 android:layout_width="0dp"
