@@ -1,5 +1,6 @@
 package com.domker.study.androidstudy;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.domker.study.androidstudy.player.MyClickListener;
 import com.domker.study.androidstudy.player.VideoPlayerIJK;
 import com.domker.study.androidstudy.player.VideoPlayerListener;
 import com.sackcentury.shinebuttonlib.ShineButton;
@@ -104,6 +106,7 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void init() {
 
         //rl_bottom = (RelativeLayout) findViewById(R.id.include_play_right);
@@ -116,7 +119,34 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
         rlPlayer = findViewById(R.id.rl_player);
         player_back=findViewById(R.id.player_back_btn);
         player_rotation=findViewById(R.id.player_rotation_image);
-        ijkPlayerView.setOnClickListener(this);
+//        ijkPlayerView.setOnClickListener(this);
+        ijkPlayerView.setOnTouchListener(new MyClickListener(new MyClickListener.MyClickCallBack() {
+            @Override
+            public void oneClick() {
+                if(!isPause){
+                    ijkPlayer.pause();
+                }
+                else{
+                    ijkPlayer.start();
+                }
+                isPause=!isPause;
+            }
+
+            @Override
+            public void doubleClick() {
+                if(isClick){
+                    tvLike.setText(likeNum+"");
+                    player_like_button.performClick();
+                    isClick = false;
+                }
+                else{
+                    tvLike.setText(likeNum+1+"");
+                    player_like_button.performClick();
+                    isClick = true;
+                }
+            }
+        }));
+
         player_back.setOnClickListener(this);
         player_rotation.setOnClickListener(this);
         player_like_button=findViewById(R.id.player_like_button);
@@ -278,18 +308,18 @@ public class IJKPlayerActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ijkPlayer:
-                if(!isPause){
-                    ijkPlayer.pause();
-                }
-                else{
-                    ijkPlayer.start();
-                }
-                isPause=!isPause;
-                break;
+//            case R.id.ijkPlayer:
+//                if(!isPause){
+//                    ijkPlayer.pause();
+//                }
+//                else{
+//                    ijkPlayer.start();
+//                }
+//                isPause=!isPause;
+//                break;
 
             case R.id.player_rotation_image:
-                videoScreenInit();
+                toggle();
                 break;
             case R.id.player_back_btn:
                 finish();

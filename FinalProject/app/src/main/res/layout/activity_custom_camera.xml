@@ -166,7 +166,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_switch_camera_white_36dp"
-            fab:fab_label="Delay 10s"
+            fab:fab_label="翻转"
             fab:fab_size="normal" />
 
     </com.github.clans.fab.FloatingActionMenu>
