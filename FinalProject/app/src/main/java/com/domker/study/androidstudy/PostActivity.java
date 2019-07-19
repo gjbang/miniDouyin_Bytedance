@@ -65,6 +65,9 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
     public ProgressDialog progressDialog;
     private IMiniDouyinService miniDouyinService;
 
+    private String userName;
+    private String stuID;
+
     String url;
 
     private boolean afterChoose;
@@ -76,6 +79,8 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
 
         Intent intent=getIntent();
         url=intent.getStringExtra("url");
+        userName=intent.getStringExtra("userName");
+        stuID=intent.getStringExtra("stuID");
 
         Log.d("debug","url1"+url);
 
@@ -96,6 +101,9 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
 
         progressDialog=new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
+
+
 
     }
 
@@ -169,8 +177,8 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
         MultipartBody.Part videoPart=MultipartBody.Part.createFormData("video",videoFile.getName(),new ProgressRequestBody(videoFile,this));
 
         //initialize data interface
-        final Call<Result> call=getMiniDouyinService().createVideo("123456",
-                "Test",coverImagePart,videoPart);
+        final Call<Result> call=getMiniDouyinService().createVideo(stuID,
+                userName,coverImagePart,videoPart);
 
 
         progressDialog.setTitle("Uploading");
@@ -180,6 +188,13 @@ public class PostActivity extends AppCompatActivity implements ProgressRequestBo
             public void onClick(DialogInterface dialog, int which) {
                 progressDialog.dismiss();
                 call.cancel();
+            }
+        });
+
+        progressDialog.setButton(DialogInterface.BUTTON_POSITIVE, "Backstage", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDialog.dismiss();
             }
         });
         progressDialog.setCanceledOnTouchOutside(false);

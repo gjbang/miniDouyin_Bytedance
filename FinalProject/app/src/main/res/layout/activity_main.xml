@@ -101,7 +101,7 @@
                 tools:targetApi="m" />
 
 
-            <TextView
+            <Button
                 android:id="@+id/about_me"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -109,8 +109,10 @@
                 android:layout_height="match_parent"
                 android:textColor="@color/colorPrimary"
                 android:layout_gravity="center"
+                android:background="@android:color/transparent"
                 android:gravity="center"
-                android:text="我"/>
+                android:text="我"
+                />
 
             <View
                 android:layout_width="0dp"

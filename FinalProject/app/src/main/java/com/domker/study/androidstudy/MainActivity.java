@@ -4,6 +4,8 @@ package com.domker.study.androidstudy;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,11 +59,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button btn_about_me;
 
     private Retrofit retrofit;
     private IMiniDouyinService miniDouyinService;
     private RecyclerView mRv;
-    private TextView mMainPage,mAboutMe;
+    private TextView mMainPage;
     private List<Video> mVideos = new ArrayList<>();
 
     private SQLiteDatabase database;
@@ -83,10 +87,18 @@ public class MainActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mMainPage = findViewById(R.id.main_page);
-        mAboutMe = findViewById(R.id.about_me);
+//        mAboutMe = findViewById(R.id.about_me);
 
         mMainPage.setTextColor(getResources().getColor(R.color.white_text));
-        mAboutMe.setTextColor(getResources().getColor(R.color.colorPrimary));
+//        mAboutMe.setTextColor(getResources().getColor(R.color.colorPrimary));
+
+        btn_about_me=findViewById(R.id.about_me);
+        btn_about_me.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserLog(v);
+            }
+        });
 
         btn_camera=findViewById(R.id.btn_for_camera);
 
@@ -112,23 +124,39 @@ public class MainActivity extends AppCompatActivity {
 
             else {
                 Log.d("debug","preinSur");
-                startActivity(new Intent(MainActivity.this, CustomCamera.class));
+               if(userName.equals("") || stuID.equals("")){
+                 UserLog(v);
+               }
+               else{
+                   Intent intent=new Intent(MainActivity.this,CustomCamera.class);
+                   intent.putExtra("user_name",userName);
+                   intent.putExtra("stuid",stuID);
+
+                   startActivity(intent);
+               }
             }
         });
 
         initDatabase();
         mVideos=dataop.loadVideoFromDatabase();
-        initRecyclerView();
-        //mRv.getAdapter().notifyItemInserted(15);
-                //notifyDataSetChanged();
-        DataRefresh();
-//        mhandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                DataRefresh();
-//            }
-//        });
 
+        initRecyclerView();
+
+
+            new AsyncTask<Objects,Integer,Objects>(){
+
+                @Override
+                protected Objects doInBackground(Objects... objects) {
+                    DataRefresh();
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Objects objects) {
+                    super.onPostExecute(objects);
+                    mVideos=dataop.loadVideoFromDatabase();
+                }
+            }.execute();
 
     }
 
@@ -139,6 +167,8 @@ public class MainActivity extends AppCompatActivity {
         dbHelper=new SQLDbHelper(this);
         dataop=new DbOperation(database,dbHelper);
         dataop.Initialize();
+
+//        DataRefresh();
 
     }
 
@@ -156,15 +186,15 @@ public class MainActivity extends AppCompatActivity {
                 if(response.isSuccessful()&&response.body()!=null){
 
                     // List<Video>即为返回的数据，RecycleView的输入源//DONE:7.16但暂时为直接json
-                    mVideos.clear();
-                    mVideos=dataop.loadVideoFromDatabase();
-                    //mVideos.addAll(response.body().getFeeds());
+//                    mVideos.clear();
+//                    mVideos=dataop.loadVideoFromDatabase();
+//                    mVideos.addAll(response.body().getFeeds());
 
                     //Objects.requireNonNull(mRv.getAdapter()).notifyItemInserted(15);
                             //notifyDataSetChanged();
-                    mRv.getAdapter().notifyDataSetChanged();
+//                    mRv.getAdapter().notifyDataSetChanged();
 
-                    dataop.saveVideo2Database(mVideos);
+                    dataop.saveVideo2Database(response.body().getFeeds());
 
                     call.cancel();
                 }
@@ -286,5 +316,49 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void UserLog(View view) {
+        getInfoOfUser();
+    }
+
+    private String userName="";
+    private String stuID="";
+
+    private void getInfoOfUser(){
+        View dialogView=View.inflate(MainActivity.this,R.layout.layout_userlog,null);
+
+        final EditText editUserName=dialogView.findViewById(R.id.edit_input_user_name);
+        final EditText editStuID=dialogView.findViewById(R.id.edit_input_student_ID);
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Log");
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                userName=editUserName.getText().toString();
+                stuID=editStuID.getText().toString();
+                if(userName.equals("")||stuID.equals("")){
+                    Toast.makeText(MainActivity.this,"Content cannot be null!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                userName="";
+                stuID="";
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alertDialog=builder.create();
+        alertDialog.setView(dialogView);
+        alertDialog.show();
     }
 }
