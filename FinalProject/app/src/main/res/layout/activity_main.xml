@@ -17,10 +17,10 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_scrollFlags="scroll"
-        android:background="#00000000">
+        android:background="#aa212121">
 
         <androidx.appcompat.widget.Toolbar
+            app:layout_scrollFlags="scroll|enterAlways"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -75,7 +75,6 @@
             android:layout_height="wrap_content">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv"
-                android:layout_marginTop="@android:dimen/notification_large_icon_height"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
