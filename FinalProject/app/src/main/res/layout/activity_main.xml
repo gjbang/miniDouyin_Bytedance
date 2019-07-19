@@ -35,7 +35,7 @@
                     android:layout_height="50dp"
                     android:src="@drawable/unsplash_jesper_christiansen"
                     android:layout_marginTop="5dp"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="5dp"
                     android:layout_weight="1"/>
                 <TextView
                     android:layout_width="0dp"
@@ -43,7 +43,7 @@
                     android:text="列表"
                     android:textColor="@color/white_text"
                     android:gravity="center"
-                    android:layout_marginStart="50dp"
+                    android:layout_marginStart="40dp"
                     android:layout_weight="3"/>
 
                 <TextView
@@ -55,7 +55,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="40dp"
                     android:text="详情"/>
                 <ImageButton
                     android:id="@+id/refresh"
